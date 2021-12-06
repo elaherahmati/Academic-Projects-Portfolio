@@ -1,0 +1,165 @@
+Model:
+!Tarife Moteqayerha;
+
+SETS:
+ProductX/1,2/;
+FactoryX/1,2/;
+ProcessX/1,2/;
+DayX/1..20/;
+ManufactureX(ProductX,FactoryX,ProcessX,DayX):X ;
+ENDSETS
+
+
+
+
+SETS:
+ProductW/1,2/; 
+FactoryW/1,2/;
+ProcessW/1,2/;
+DayW/1..23/;
+ManufactureW(ProductW,FactoryW,ProcessW,DayW):W;
+ENDSETS
+
+
+
+
+SETS:
+Product/1,2/;
+Factory/1,2/;
+Month/1,2/;
+Process/1,2/;
+Manufacture(Product,Factory,Month,Process):Y, Z, V;
+ENDSETS
+
+
+!Tabe Hadaf;
+
+Max = 83*( @SUM(Manufacture(a,b,c,i)|  a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # c#LE#2 # AND # i#LE#2: Z(a,b,c,i)) + @SUM(Manufacture(a,b,c,i)|  a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # c#LE#2 # AND # i#LE#2: Y(a,b,c,i))) 
++ 112 * (  @SUM(Manufacture(a,b,c,i)|  a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # c#LE#2 # AND # i#LE#2: Z(a,b,c,i)) + @SUM(Manufacture(a,b,c,i)|  a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # c#LE#2 # AND # i#LE#2: Y(a,b,c,i))) 
+- (3*(  @SUM(Manufacture(a,b,c,i)|  a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # c#LE#2 # AND # i#LE#2: V(a,b,c,i))) 
++4*(   @SUM(Manufacture(a,b,c,i)|  a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # c#LE#2 # AND # i#LE#2: V(a,b,c,i) )))
+-(
+  62 * @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#1 # AND # c#GE#1 : X(a,b,c,i))
++ 59 * @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#2 # AND # c#GE#2 : X(a,b,c,i)) 
++ 61 * @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#1 # AND # c#GE#1 : X(a,b,c,i)) 
++ 65 * @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#2 # AND # c#GE#2 : X(a,b,c,i))
++ 78 * @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#1 # AND # c#GE#1 : X(a,b,c,i)) 
++ 85 * @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#2 # AND # c#GE#2 : X(a,b,c,i)) 
++ 89 * @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#1 # AND # c#GE#1 : X(a,b,c,i)) 
++ 86 * @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#2 # AND # c#GE#2 : X(a,b,c,i))
++ 62 * @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#1 # AND # c#GE#1 : W(a,b,c,i)) 
++ 59 * @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#2 # AND # c#GE#2 : W(a,b,c,i)) 
++ 61 * @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#1 # AND # c#GE#1 : W(a,b,c,i)) 
++ 65 * @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#2 # AND # c#GE#2 : W(a,b,c,i)) 
++ 78 * @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#1 # AND # c#GE#1 : W(a,b,c,i)) 
++ 85 * @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#2 # AND # c#GE#2 : W(a,b,c,i)) 
++ 89 * @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#1 # AND # c#GE#1 : W(a,b,c,i)) 
++ 86 * @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#2 # AND # c#GE#2 : W(a,b,c,i))
+)
+- ( 9*(@SUM(Manufacture(a,b,c,i)|  a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # c#LE#2 # AND # i#LE#2: Y(a,b,c,i))) + 7*(@SUM(Manufacture(a,b,c,i)|  a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # c#LE#2 # AND # i#LE#2: Y(a,b,c,i))));
+
+
+!Mahdodiat haye Rabt Dahandeye Tolid = Forosh + Ersal + Anbar;
+
+  @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#1 # AND # c#GE#1 : X(a,b,c,i))    = Y(1,1,1,1)+ Z(1,1,1,1) + V(1,1,1,1);
+  @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#2 # AND # c#GE#2  : X(a,b,c,i))   = Y(1,1,1,2)+ Z(1,1,1,2) + V(1,1,1,2);                                                         
+
+ @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#1 # AND # c#GE#1 : X(a,b,c,i))     = Y(2,1,1,1)+ Z(2,1,1,1) + V(2,1,1,1);
+ @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#2 # AND # c#GE#2 : X(a,b,c,i))   = Y(2,1,1,2)+ Z(2,1,1,2) + V(2,1,1,2);
+
+
+
+
+
+  @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#1 # AND # c#GE#1  : X(a,b,c,i))  = Y(1,2,1,1)+ Z(1,2,1,1) + V(1,2,1,1); 
+  @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#2 # AND # c#GE#2 : X(a,b,c,i))   = Y(1,2,1,2)+ Z(1,2,1,2) + V(1,2,1,2); 
+
+  @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#1 # AND # c#GE#1 : X(a,b,c,i))   = Y(2,2,1,1)+ Z(2,2,1,1) + V(2,2,1,1);
+  @SUM(ManufactureX(a,b,c,i)| i#LE#20 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#2 # AND # c#GE#2 : X(a,b,c,i))   = Y(2,2,1,2)+ Z(2,2,1,2) + V(2,2,1,2);
+
+
+
+
+  @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#1 # AND # c#GE#1 : W(a,b,c,i)) + V(1,1,1,1)   = Y(1,1,2,1)+ Z(1,1,2,1) + V(1,1,2,1);
+  @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#2 # AND # c#GE#2 : W(a,b,c,i)) + V(1,1,1,2)   = Y(1,1,2,2)+ Z(1,1,2,2) + V(1,1,2,2);       
+
+  @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#1 # AND # c#GE#1 : W(a,b,c,i)) + V(2,1,1,1)   = Y(2,1,2,1)+ Z(2,1,2,1) + V(2,1,2,1);
+  @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#2 # AND # c#GE#2 : W(a,b,c,i)) + V(2,1,1,2)   = Y(2,1,2,2)+ Z(2,1,2,2) + V(2,1,2,2);
+
+  @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#1 # AND # c#GE#1 : W(a,b,c,i)) + V(1,2,1,1)   = Y(1,2,2,1)+ Z(1,2,2,1) + V(1,2,2,1);
+  @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#2 # AND # c#GE#2 : W(a,b,c,i)) + V(1,2,1,2)   = Y(1,2,2,2)+ Z(1,2,2,2) + V(1,2,2,2); 
+
+  @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#1 # AND # c#GE#1 : W(a,b,c,i)) + V(2,2,1,1)   = Y(2,2,2,1)+ Z(2,2,2,1) + V(2,2,2,1);
+  @SUM(ManufactureW(a,b,c,i)| i#LE#23 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#2 # AND # c#GE#2 : W(a,b,c,i)) + V(2,2,1,2)   = Y(2,2,2,2)+ Z(2,2,2,2) + V(2,2,2,2);
+
+!Mahdodiat haye Anbar;
+
+V(1,1,1,1) + V(2,1,1,1) + V(1,1,1,2) + V(2,1,1,2) <= 1000;
+
+V(1,2,1,1) + V(2,2,1,1) + V(1,2,1,2) + V(2,2,1,2) <= 1000;
+
+V(2,1,2,1) + V(1,1,2,1)+ V(2,1,2,2) + V(1,1,2,2) <= 1000;
+
+V(1,2,2,1) + V(2,2,2,1) + V(1,2,2,2) + V(2,2,2,2)  <= 1000;
+
+!Mahdodiat haye Tolide har roz;
+
+@For(ManufactureX(a,b,c,i) | i#LE#20 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#1 # AND # c#GE#1   : X(a,b,c,i) <= 100);
+
+@For(ManufactureX(a,b,c,i) | i#LE#20 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#1 # AND # c#GE#1   : X(a,b,c,i) <= 120);
+
+@For(ManufactureX(a,b,c,i) | i#LE#20 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#2 # AND # c#GE#2   : X(a,b,c,i) <= 140);
+
+@For(ManufactureX(a,b,c,i) | i#LE#20 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#2 # AND # c#GE#2   : X(a,b,c,i) <= 150);
+
+@For(ManufactureX(a,b,c,i) | i#LE#20 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#1 # AND # c#GE#1  : X(a,b,c,i) <= 130);
+
+@For(ManufactureX(a,b,c,i) | i#LE#20 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#2 # AND # c#GE#2   : X(a,b,c,i) <= 110);
+
+@For(ManufactureX(a,b,c,i) | i#LE#20 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#1 # AND # c#GE#1  : X(a,b,c,i) <= 160);
+
+@For(ManufactureX(a,b,c,i) | i#LE#20 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#2 # AND # c#GE#2   : X(a,b,c,i) <= 130);
+
+
+
+
+
+@For(ManufactureW(a,b,c,i) | i#LE#23 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#1 # AND # c#GE#1  : W(a,b,c,i) <= 100);
+
+@For(ManufactureW(a,b,c,i) | i#LE#23 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#1 # AND # c#GE#1  : W(a,b,c,i) <= 120);
+
+@For(ManufactureW(a,b,c,i) | i#LE#23 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#2 # AND # c#GE#2  : W(a,b,c,i) <= 140);
+
+@For(ManufactureW(a,b,c,i) | i#LE#23 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#1 # AND # b#GE#1  # AND # c#LE#2 # AND # c#GE#2  : W(a,b,c,i) <= 150);
+
+@For(ManufactureW(a,b,c,i) | i#LE#23 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#1 # AND # c#GE#1  : W(a,b,c,i) <= 130);
+
+@For(ManufactureW(a,b,c,i) | i#LE#23 # AND # a#LE#1 # AND # a#GE#1 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#2 # AND # c#GE#2  : W(a,b,c,i) <= 110);
+
+@For(ManufactureW(a,b,c,i) | i#LE#23 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#1 # AND # c#GE#1  : W(a,b,c,i) <= 160);
+
+@For(ManufactureW(a,b,c,i) | i#LE#23 # AND # a#LE#2 # AND # a#GE#2 # AND # b#LE#2 # AND # b#GE#2  # AND # c#LE#2 # AND # c#GE#2  : W(a,b,c,i) <= 130);
+
+
+!Mahdodiat haye Taqaza;
+
+
+Z(1,1,1,1) + Y(1,2,1,1) + Z(1,1,1,2) + Y(1,2,1,2)  <= 3600;
+
+Z(2,1,1,1) + Y(2,2,1,1) + Z(2,1,1,2) + Y(2,2,1,2) <= 4500;
+
+Z(1,1,2,1) + Y(1,2,2,1) + Z(1,1,2,2) + Y(1,2,2,2) <= 6300;
+
+Z(2,1,2,1) + Y(2,2,2,1) + Z(2,1,2,2) + Y(2,2,2,2)  <= 5400;
+
+Z(1,2,1,1) + Y(1,1,1,1) + Z(1,2,1,2) + Y(1,1,1,2) <= 4900;
+
+Z(1,2,2,1) + Y(1,1,2,1) + Z(1,2,2,2) + Y(1,1,2,2)<= 4200;
+
+Z(2,2,1,1) + Y(2,1,1,1) + Z(2,2,1,2) + Y(2,1,1,2)<= 5100;
+
+Z(2,2,2,1) + Y(2,1,2,1) + Z(2,2,2,2) + Y(2,1,2,2)<= 6000;
+
+
+END
+
