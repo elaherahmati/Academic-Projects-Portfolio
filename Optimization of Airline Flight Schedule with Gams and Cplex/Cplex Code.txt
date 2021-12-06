@@ -1,0 +1,466 @@
+/////// Q1-Part1
+
+ .mod file code
+
+/*********************************************
+ * OPL 12.9.0.0 Model
+ * Author: Elahe
+ * Creation Date: Dec 19, 2019 at 6:24:10 PM
+ *********************************************/
+ 
+//Large Airplanes Index 
+range i = 1..10;
+//Medium Airplanes Index 
+range j = 1..15;
+//Small Airplanes Index 
+range m = 1..2;
+//1 = City A  ,  2 = City B  ,  3 = City C , 4 = City D  
+range k = 1..4;
+//Airplane type
+{string} Type={"B777","A330","A320"};
+
+//inputs from Question which are read from excel
+//Cost is the Table of Flight Costs given in Prob, First Argument (k) is the city and the Second Argument (Type) is the Airplane type 
+//Flight_Hour is the Table of Flight Hours given in Prob, First Argument (k) is the city and the Second Argument (Type) is the Airplane type 
+int Cost[k][Type]=...;
+int Flight_Hour[k][Type]=...;
+
+//Decision Variables
+//Number of Daily Flights of ith Large Airplane to City k 
+dvar int+ B[i][k];
+//Number of Daily Flights of jth Medium Airplane to City k 
+dvar int+ W[j][k];
+//Number of Daily Flights of mth Small Airplane to City k 
+dvar int+ L[m][k];
+//Best Solution
+dvar int+ obj;
+
+//Goal: Minimizing Cost
+minimize  obj;
+
+subject to {
+
+			//Objective value
+obj==Cost[1]["B777"]*sum(i in i) B[i][1]+ Cost[2]["B777"]*sum(i in i) B[i][2]+ Cost[3]["B777"]*sum(i in i)  B[i][3]+ Cost[4]["B777"]*sum(i in i) B[i][4]+
+Cost[1]["A330"]*sum(j in j)  W[j][1]+Cost[2]["A330"]* sum(j in j) W[j][2]+ Cost[3]["A330"]*sum(j in j) W[j][3]+ 
+Cost[1]["A320"]*sum(m in m) L[m][1]+ Cost[2]["A320"]*sum(m in m) L[m][2]+ Cost[3]["A320"]*sum(m in m) L[m][3]+ Cost[4]["A320"]*sum(m in m) L[m][4];
+
+
+//Constraints related to the number of flights that each city should have daily. 
+			forall (k in k : k <= 3)
+		sum  (i in i) B[i][k] +sum (j in j) W[j][k]+sum (m in m) L[m][k] == 4;
+			
+			sum  (i in i) B[i][4] +sum (j in j) W[j][4]+sum (m in m) L[m][4] == 2;
+			
+//Constraints related to the Maximum daily flight hour limit of each airplane 
+			forall (i in i)
+			  Flight_Hour[1]["B777"]*B[i][1]+Flight_Hour[2]["B777"]*B[i][2]+Flight_Hour[3]["B777"]*B[i][3]+Flight_Hour[4]["B777"]*B[i][4]<=18;
+			
+			forall (j in j)
+			  Flight_Hour[1]["A330"]*W[j][1]+Flight_Hour[2]["A330"]*W[j][2]+Flight_Hour[3]["A330"]*W[j][3]<=18;
+			
+			forall (m in m)
+			  Flight_Hour[1]["A320"]*L[m][1]+Flight_Hour[2]["A320"]*L[m][2]+Flight_Hour[3]["A320"]*L[m][3]+Flight_Hour[4]["A320"]*L[m][4]<=18;
+			
+			//Medium Airplanes cant fly to City D 
+			forall (j in j)
+				W[j][4]== 0;
+						
+     		}
+
+
+.dat file code
+
+/*********************************************
+ * OPL 12.9.0.0 Data
+ * Author: Elahe
+ * Creation Date: Dec 19, 2019 at 6:24:10 PM
+ *********************************************/
+SheetConnection sheet("Input.xlsx");
+Cost from SheetRead(sheet,"Data!C2:E5");
+Flight_Hour from SheetRead(sheet,"Data!I2:K5");
+
+SheetConnection sheet1("Output_1.xlsx");
+B to SheetWrite(sheet1,"B777!A1:D10");
+W to SheetWrite(sheet1,"A330!A1:D15");
+L to SheetWrite(sheet1,"A320!A1:D2");
+obj to SheetWrite(sheet1,"Objective!A1:A1");
+
+
+
+
+
+
+
+
+
+
+
+/////// Q1-Part2
+
+.mod file code
+
+
+/*********************************************
+ * OPL 12.9.0.0 Model
+ * Author: Elahe
+ * Creation Date: Dec 19, 2019 at 7:21:32 PM
+ *********************************************/
+//Large Airplanes Index 
+range i = 1..10;
+//Medium Airplanes Index 
+range j=1..15;
+//Small Airplanes Indices 
+range m = 1..2;
+//1 = City A  ,  2 = City B  ,  3 = City C , 4 = City D  
+range k=1..4;
+//Airplane type
+{string} Type= {"B777","A330","A320"};
+
+//inputs from Question which are read from excel
+//* Cost is the Table of Flight Costs given in Prob, First Argument (k) is the city and the Second Argument (Type) is the Airplane type 
+//Flight_Hour is the Table of Flight Hours given in Prob, First Argument (k) is the city and the Second Argument (Type) is the Airplane type 
+//Profit is the Table of Profit given in Prob, First Argument (k) is the city and the Second Argument (Type) is the Airplane type 
+int Cost[k][Type]=...;
+int Flight_Hour[k][Type]=...;
+int Profit [k][Type]=...;
+
+//Decision Variables
+//Number of Daily Flights of ith Large Airplane to City k 
+dvar int+ B[i][k];
+//Number of Daily Flights of jth Medium Airplane to City k 
+dvar int+ W[j][k];
+//Number of Daily Flights of mth Small Airplane to City k 
+dvar int+ L[m][k];
+//Best Solution
+dvar int+ obj;
+
+//Goal: Maximizing Profit
+maximize  obj;
+
+subject to {
+
+			//Objective value
+obj == sum(i in i) Profit[1]["B777"]*B[i][1]+ sum(i in i) Profit[2]["B777"]*B[i][2]+ sum(i in i) Profit[3]["B777"]* B[i][3]+ sum(i in i) Profit[4]["B777"]*B[i][4]+
+sum(j in j) Profit[1]["A330"]* W[j][1]+ sum(j in j)Profit[2]["A330"]* W[j][2]+ sum(j in j)Profit[3]["A330"]* W[j][3]+ 
+sum(m in m)Profit[1]["A320"]* L[m][1]+ sum(m in m) Profit[2]["A320"]*L[m][2]+ sum(m in m) Profit[3]["A320"]*L[m][3]+ sum(m in m)Profit[4]["A320"]* L[m][4];
+
+
+//Constraints related to the number of flights that each city should have daily. 
+			forall (k in k : k < 4)
+			sum  (i in i) B[i][k] +sum (j in j) W[j][k]+sum (m in m) L[m][k] == 4;
+			
+			sum  (i in i) B[i][4] +sum (j in j) W[j][4]+sum (m in m) L[m][4] == 2;
+			
+//Constraints related to the Maximum daily flight hour limit of each airplane 
+			forall (i in i)
+			  Flight_Hour[1]["B777"]*B[i][1]+Flight_Hour[2]["B777"]*B[i][2]+Flight_Hour[3]["B777"]*B[i][3]+Flight_Hour[4]["B777"]*B[i][4]<=18;
+			
+			forall (j in j)
+			  Flight_Hour[1]["A330"]*W[j][1]+Flight_Hour[2]["A330"]*W[j][2]+Flight_Hour[3]["A330"]*W[j][3]<=18;
+			
+			forall (m in m)
+			  Flight_Hour[1]["A320"]*L[m][1]+Flight_Hour[2]["A320"]*L[m][2]+Flight_Hour[3]["A320"]*L[m][3]+Flight_Hour[4]["A320"]*L[m][4]<=18;
+			
+			//Medium Airplanes cant fly to City D 
+			forall (j in j)
+				W[j][4]==0;
+						
+     		}
+
+.dat file code
+
+/*********************************************
+ * OPL 12.9.0.0 Data
+ * Author: Elahe
+ * Creation Date: Dec 19, 2019 at 7:21:32 PM
+ *********************************************/
+SheetConnection sheet("Input.xlsx");
+Cost from SheetRead(sheet,"Data!C2:E5");
+Flight_Hour from SheetRead(sheet,"Data!I2:K5");
+Profit  from SheetRead(sheet,"Data!O2:Q5");
+
+SheetConnection sheet1("Output_2.xlsx");
+B to SheetWrite(sheet1,"B777!A1:D10");
+W to SheetWrite(sheet1,"A330!A1:D15");
+L to SheetWrite(sheet1,"A320!A1:D2");
+obj to SheetWrite(sheet1,"Objective!A1:A1");
+
+
+
+
+
+
+
+
+/////// Q1-Part3
+
+ .mod file code
+
+/*********************************************
+ * OPL 12.9.0.0 Model
+ * Author: Elahe
+ * Creation Date: Dec 19, 2019 at 7:25:59 PM
+ *********************************************/
+//Large Airplanes Index 
+range i = 1..10;
+//Medium Airplanes Index 
+range j=1..15;
+//Small Airplanes Indices 
+range m = 1..2;
+//1 = City A  ,  2 = City B  ,  3 = City C , 4 = City D  
+range k=1..4;
+//Airplane type
+{string} Type= {"B777","A330","A320"};
+
+//inputs from Question which are read from excel
+//Cost is the Table of Flight Costs given in Prob, First Argument (k) is the city and the Second Argument (Type) is the Airplane type 
+//Flight_Hour is the Table of Flight Hours given in Prob, First Argument (k) is the city and the Second Argument (Type) is the Airplane type 
+int Cost[k][Type]=...;
+int Flight_Hour[k][Type]=...;
+
+//Decision Variables
+//Number of Daily Flights of ith Large Airplane to City k 
+dvar int+ B[i][k];
+//Number of Daily Flights of jth Medium Airplane to City k 
+dvar int+ W[j][k];
+//Number of Daily Flights of mth Small Airplane to City k 
+dvar int+ L[m][k];
+//Best Solution
+dvar int+ obj;
+
+//Goal: Minimizing Total Flight Hour
+minimize obj ;
+
+
+subject to {
+
+
+			//Objective value
+obj == sum(i in i) Flight_Hour[1]["B777"]*B[i][1]+ sum(i in i) Flight_Hour[2]["B777"]*B[i][2]+ sum(i in i) Flight_Hour[3]["B777"]* B[i][3]+ sum(i in i) Flight_Hour[4]["B777"]*B[i][4]+
+sum(j in j) Flight_Hour[1]["A330"]* W[j][1]+ sum(j in j)Flight_Hour[2]["A330"]* W[j][2]+ sum(j in j)Flight_Hour[3]["A330"]* W[j][3]+ 
+sum(m in m)Flight_Hour[1]["A320"]* L[m][1]+ sum(m in m) Flight_Hour[2]["A320"]*L[m][2]+ sum(m in m) Flight_Hour[3]["A320"]*L[m][3]+ sum(m in m)Flight_Hour[4]["A320"]* L[m][4];
+
+//Constraints related to the number of flights that each city should have daily. 
+			forall (k in k : k < 4)
+			sum  (i in i) B[i][k] +sum (j in j) W[j][k]+sum (m in m) L[m][k] == 4;
+			
+			sum  (i in i) B[i][4] +sum (j in j) W[j][4]+sum (m in m) L[m][4] == 2;
+			
+//Constraints related to the Maximum daily flight hour limit of each airplane 
+			forall (i in i)
+			  Flight_Hour[1]["B777"]*B[i][1]+Flight_Hour[2]["B777"]*B[i][2]+Flight_Hour[3]["B777"]*B[i][3]+Flight_Hour[4]["B777"]*B[i][4]<=18;
+			
+			forall (j in j)
+			  Flight_Hour[1]["A330"]*W[j][1]+Flight_Hour[2]["A330"]*W[j][2]+Flight_Hour[3]["A330"]*W[j][3]<=18;
+			
+			forall (m in m)
+			  Flight_Hour[1]["A320"]*L[m][1]+Flight_Hour[2]["A320"]*L[m][2]+Flight_Hour[3]["A320"]*L[m][3]+Flight_Hour[4]["A320"]*L[m][4]<=18;
+			
+			//Medium Airplanes cant fly to City D 
+			forall (j in j)
+				W[j][4]==0;
+						
+     		}
+
+
+
+
+ .dat file code
+
+/*********************************************
+ * OPL 12.9.0.0 Data
+ * Author: Elahe
+ * Creation Date: Dec 19, 2019 at 7:25:59 PM
+ *********************************************/
+SheetConnection sheet("Input.xlsx");
+Cost from SheetRead(sheet,"Data!C2:E5");
+Flight_Hour from SheetRead(sheet,"Data!I2:K5");
+
+SheetConnection sheet1("Output_3.xlsx");
+B to SheetWrite(sheet1,"B777!A1:D10");
+W to SheetWrite(sheet1,"A330!A1:D15");
+L to SheetWrite(sheet1,"A320!A1:D2");
+obj to SheetWrite(sheet1,"Objective!A1:A1");
+
+
+
+
+//////Q2-Part1
+
+ .mod file code
+
+
+Note: There is no code in .dat file
+
+/*********************************************
+* OPL 12.9.0.0 Model
+* Author: Elahe
+* Creation Date: Dec 19, 2019 at 10:21:18 PM
+*********************************************/
+//Newspaper Interval Index
+range i = 1..3;
+//TV Interval Index
+range j = 1..3;
+//Binary Variable Index
+range k = 1..4;
+
+//Variables
+//Number of News Ad in ith interval
+dvar int+  X[i];
+//Number of TV Ad in jth interval
+dvar int+  Y[j];
+//binary variables
+dvar boolean Z[k];
+//Goal: Maximizing Customers
+maximize 900*X[1]+600*X[2]+300*X[3]+10000*Y[1]+5000*Y[2]+2000*Y[3];
+
+subject to {
+
+//Interval Constraint
+forall (j in j)  Y[j] <= 5;
+forall (i in i)  X[i] <= 10;
+
+//Budget Constraint
+1000*(sum (i in i) X[i])+ 10000*(sum (j in j)Y[j]) <= 150000;
+
+//Constraint Subject to News Intervals
+X[1]<=10;
+X[1]>=10*Z[1];
+X[2]<=10*Z[1];
+X[2]>=10*Z[2];
+X[3]<=10*Z[2];
+X[3]>=0;
+
+//Constraint Subject to TV Intervals
+Y[1]<=5;
+Y[1]>=5*Z[3];
+Y[2]<=5*Z[3];
+Y[2]>=5*Z[4];
+Y[3]<=5*Z[4];
+Y[3]>=0;
+
+//Constraint Subject to Number Of Ad
+sum (i in i ) X[i] <=30;
+sum (j in j ) Y[j] <=15;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////Q2-Part2
+
+.mod file code
+
+Note: There is no code in .dat file
+
+/*********************************************
+* OPL 12.9.0.0 Model
+* Author: Elahe
+* Creation Date: Dec 19, 2019 at 10:28:40 PM
+*********************************************/
+
+//Newspaper Interval Index
+range i = 1..3;
+//TV Interval Index
+range j = 1..5;
+//Binary Variable Index
+range k = 1..5;
+
+//Variables
+//Number of News Ad in ith interval
+dvar int+  X[i];
+//Number of TV Ad in jth interval
+dvar int+  Y[j];
+//binary variables
+dvar boolean Z[k];
+
+//Goal: Maximizing Customers
+maximize 900*X[1]+600*X[2]+300*X[3]+10000*Y[1]+5000*Y[2]+2000*Y[3];
+
+subject to {
+
+//Interval Constraint
+forall (j in j : j<=3)  Y[j] <= 5;
+Y[4]<=12;
+Y[5]<=3;
+forall (i in i)  X[i] <= 10;
+
+//Budget Constraint
+1000*(sum (i in i) X[i])+ 10000*Y[4]+8000*Y[5]<= 150000;
+
+//Constraint Subject to News Intervals
+X[1]>=10*Z[1];
+X[2]<=10*Z[1];
+X[2]>=10*Z[2];
+X[3]<=10*Z[2];
+
+
+//Constraint Subject to TV Intervals
+Y[1]>=5*Z[3];
+Y[2]<=5*Z[3];
+Y[2]>=5*Z[4];
+Y[3]<=5*Z[4];
+
+//New Cons.
+Y[4]>=12*Z[5];
+Y[5]<=3*Z[5];
+
+//Constraint Subject to Number Of Ad
+sum (i in i ) X[i] <=30;
+sum (j in j : j<=3) Y[j] <=15;
+
+//Total Ad Number
+sum (i in i ) X[i] +  Y[1] + Y[2]+Y[3] <=30;
+
+//Relation between TV Ads
+Y[1]+Y[2]+Y[3]==Y[4]+Y[5];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

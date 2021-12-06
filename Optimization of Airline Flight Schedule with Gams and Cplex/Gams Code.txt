@@ -1,0 +1,562 @@
+
+////////Q1-Part1
+
+
+sets
+
+*Large Airplanes Index
+  i number_typeB /1*10/
+*Medium Airplanes Index
+  j number_typeM /1*15/
+*Small Airplanes Indices
+  m number_typeL /1*2/
+* 1 = City A  ,  2 = City B  ,  3 = City C , 4 = City D
+  k city /1*4/
+
+  Type Type/B777,A330,A320/;
+
+
+*Inputs
+
+Parameter Cost(k,Type),Flight_Hour(k,Type);
+$call GDXXRW  Input.xlsx par=Cost rng=Data!b1:e5 Rdim=1 cdim=1 par=Flight_Hour rng=Data!h1:k5 Rdim=1 cdim=1
+$GDXIN Input.gdx
+$load Cost,Flight_Hour
+$gdxin
+;
+
+* Cost is the Table of Flight Costs given in Prob, First Argument (k) is the city and the Second Argument (Type) is the Airplane type
+* Flight_Hour is the Table of Flight Hours given in Prob, First Argument (k) is the city and the Second Argument (Type) is the Airplane type
+
+
+
+variables
+ z OptAnswer
+integer variables
+*Number of Daily Flights of ith Large Airplane to City k
+ B(i,k)
+*Number of Daily Flights of jth Medium Airplane to City k
+ W(j,k)
+*Number of Daily Flights of mth Small Airplane to City k
+ L(m,k)
+ ;
+
+Equation
+Goal
+
+*Constraints related to the number of flights that each city should have daily.
+Fly_Num1
+Fly_Num2
+Fly_Num3
+Fly_Num4
+
+*Constraints related to the Maximum daily flight hour limit of each airplane
+Hour_I(i)
+Hour_J(j)
+Hour_M(m)
+
+* Medium Airplanes cant fly to City D
+Impossible_Flight(j)
+
+* Sign Constraint
+Sign_B(i,k)
+Sign_W(j,k)
+Sign_L(m,k)
+;
+*Minimizing Costs
+Goal.. z =E= sum(i,Cost('1','B777')*B(i,'1') + Cost('2','B777')*B(i,'2') +
+Cost('3','B777')*B(i,'3') + Cost('4','B777')*B(i,'4')) +
+sum(j,Cost('1','A330')*W(j,'1') + Cost('2','A330')*W(j,'2') +
+Cost('3','A330')*W(j,'3')) +
+sum(m,Cost('1','A320')*L(m,'1') + Cost('2','A320')*L(m,'2') +
+Cost('3','A320')*L(m,'3') + Cost('4','A320')*L(m,'4'));
+
+
+*Constraints related to the number of flights that each city should have daily.
+Fly_Num1..sum(i , B(i,'1')) + sum(j,W(j,'1')) + sum(m,L(m,'1')) =E=4;
+Fly_Num2..sum(i , B(i,'2')) + sum(j,W(j,'2')) + sum(m,L(m,'2')) =E=4;
+Fly_Num3..sum(i , B(i,'3')) + sum(j,W(j,'3')) + sum(m,L(m,'3')) =E=4;
+Fly_Num4..sum(i , B(i,'4')) + sum(j,W(j,'4')) + sum(m,L(m,'4')) =E=2;
+
+*Constraints related to the Maximum daily flight hour limit of each airplane
+Hour_I(i).. Flight_Hour('1','B777')*B(i,'1') + Flight_Hour('2','B777')*B(i,'2') + Flight_Hour('3','B777')*B(i,'3') + Flight_Hour('4','B777')*B(i,'4') =l= 18;
+Hour_J(j).. Flight_Hour('1','A330')*W(j,'1') + Flight_Hour('2','A330')*W(j,'2') + Flight_Hour('3','A330')*W(j,'3')  =l= 18;
+Hour_M(m).. Flight_Hour('1','A320')*L(m,'1') + Flight_Hour('2','A320')*L(m,'2') + Flight_Hour('3','A320')*L(m,'3') + Flight_Hour('4','A320')*L(m,'4') =l= 18;
+
+* Medium Airplanes cant fly to City D
+Impossible_Flight(j).. W(j,'4') =e= 0 ;
+
+* Sign Constraint
+Sign_B(i,k).. B(i,k)=g=0      ;
+Sign_W(j,k)..W(j,k) =g=0   ;
+Sign_L(m,k)..L(m,k) =g=0
+;
+
+Model Question1_Part1 inja modele /all/;
+Solve Question1_Part1 using MIP minimization z;
+
+execute_unload "Output_Part1.gdx"   z , B, W,L ;
+execute 'gdxxrw.exe Output_Part1.gdx var=z rng=TargetFunction_MinCost!a1'
+execute 'gdxxrw.exe Output_Part1.gdx var=B rng=B777Airplane!a1'
+execute 'gdxxrw.exe Output_Part1.gdx var=W rng=A330Airplane!a1'
+execute 'gdxxrw.exe Output_Part1.gdx var=L rng=A320Airplane!a1'
+
+
+
+
+
+
+
+
+
+////////Q1-Part2
+
+sets
+
+*Large Airplanes Index
+  i number_typeB /1*10/
+*Medium Airplanes Index
+  j number_typeM /1*15/
+*Small Airplanes Indices
+  m number_typeL /1*2/
+* 1 = City A  ,  2 = City B  ,  3 = City C , 4 = City D
+  k city /1*4/
+
+  Type Type/B777,A330,A320/;
+
+
+*Inputs
+
+Parameter Cost(k,Type),Flight_Hour(k,Type),Profit(k,Type);
+$call GDXXRW  Input.xlsx par=Cost rng=Data!b1:e5 Rdim=1 cdim=1 par=Flight_Hour rng=Data!h1:k5 Rdim=1 cdim=1 par=Profit rng=Data!n1:q5 Rdim=1 cdim=1
+$GDXIN Input.gdx
+$load Cost,Flight_Hour,Profit
+$gdxin
+;
+
+* Cost is the Table of Flight Costs given in Prob, First Argument (k) is the city and the Second Argument (Type) is the Airplane type
+* Flight_Hour is the Table of Flight Hours given in Prob, First Argument (k) is the city and the Second Argument (Type) is the Airplane type
+
+
+
+variables
+ z OptAnswer
+integer variables
+*Number of Daily Flights of ith Large Airplane to City k
+ B(i,k)
+*Number of Daily Flights of jth Medium Airplane to City k
+ W(j,k)
+*Number of Daily Flights of mth Small Airplane to City k
+ L(m,k)
+ ;
+
+Equation
+Goal
+
+*Constraints related to the number of flights that each city should have daily.
+Fly_Num1
+Fly_Num2
+Fly_Num3
+Fly_Num4
+
+*Constraints related to the Maximum daily flight hour limit of each airplane
+Hour_I(i)
+Hour_J(j)
+Hour_M(m)
+
+* Medium Airplanes cant fly to City D
+Impossible_Flight(j)
+
+* Sign Constraint
+Sign_B(i,k)
+Sign_W(j,k)
+Sign_L(m,k)
+;
+*Maximizing Profit
+Goal.. z =E= sum(i,Profit('1','B777')*B(i,'1') + Profit('2','B777')*B(i,'2') +
+Profit('3','B777')*B(i,'3') + Profit('4','B777')*B(i,'4')) +
+sum(j,Profit('1','A330')*W(j,'1') + Profit('2','A330')*W(j,'2') +
+Profit('3','A330')*W(j,'3')) +
+sum(m,Profit('1','A320')*L(m,'1') + Profit('2','A320')*L(m,'2') +
+Profit('3','A320')*L(m,'3') + Profit('4','A320')*L(m,'4'));
+
+
+*Constraints related to the number of flights that each city should have daily.
+Fly_Num1..sum(i , B(i,'1')) + sum(j,W(j,'1')) + sum(m,L(m,'1')) =E=4;
+Fly_Num2..sum(i , B(i,'2')) + sum(j,W(j,'2')) + sum(m,L(m,'2')) =E=4;
+Fly_Num3..sum(i , B(i,'3')) + sum(j,W(j,'3')) + sum(m,L(m,'3')) =E=4;
+Fly_Num4..sum(i , B(i,'4')) + sum(j,W(j,'4')) + sum(m,L(m,'4')) =E=2;
+
+*Constraints related to the Maximum daily flight hour limit of each airplane
+Hour_I(i).. Flight_Hour('1','B777')*B(i,'1') + Flight_Hour('2','B777')*B(i,'2') + Flight_Hour('3','B777')*B(i,'3') + Flight_Hour('4','B777')*B(i,'4') =l= 18;
+Hour_J(j).. Flight_Hour('1','A330')*W(j,'1') + Flight_Hour('2','A330')*W(j,'2') + Flight_Hour('3','A330')*W(j,'3')  =l= 18;
+Hour_M(m).. Flight_Hour('1','A320')*L(m,'1') + Flight_Hour('2','A320')*L(m,'2') + Flight_Hour('3','A320')*L(m,'3') + Flight_Hour('4','A320')*L(m,'4') =l= 18;
+
+* Medium Airplanes cant fly to City D
+Impossible_Flight(j).. W(j,'4') =e= 0 ;
+
+* Sign Constraint
+Sign_B(i,k).. B(i,k)=g=0      ;
+Sign_W(j,k)..W(j,k) =g=0   ;
+Sign_L(m,k)..L(m,k) =g=0
+;
+
+
+Model Question1_Part2 inja modele /all/;
+Solve Question1_Part2 using MIP maximization z;
+
+*Output
+execute_unload "Output_Part2.gdx"   z , B, W,L ;
+execute 'gdxxrw.exe Output_Part2.gdx var=z rng=TargetFunction_MaxProfit!a1'
+execute 'gdxxrw.exe Output_Part2.gdx var=B rng=B777Airplane!a1'
+execute 'gdxxrw.exe Output_Part2.gdx var=W rng=A330Airplane!a1'
+execute 'gdxxrw.exe Output_Part2.gdx var=L rng=A320Airplane!a1'
+
+
+
+
+////////Q1-Part3
+
+sets
+
+*Large Airplanes Index
+  i number_typeB /1*10/
+*Medium Airplanes Index
+  j number_typeM /1*15/
+*Small Airplanes Indices
+  m number_typeL /1*2/
+* 1 = City A  ,  2 = City B  ,  3 = City C , 4 = City D
+  k city /1*4/
+
+  Type Type/B777,A330,A320/;
+
+
+*Inputs
+
+Parameter Cost(k,Type),Flight_Hour(k,Type);
+$call GDXXRW Input.xlsx par=Cost rng=Data!b1:e5 Rdim=1 cdim=1 par=Flight_Hour rng=Data!h1:k5 Rdim=1 cdim=1
+$GDXIN Input.gdx
+$load Cost,Flight_Hour
+$gdxin
+;
+
+* Cost is the Table of Flight Costs given in Prob, First Argument (k) is the city and the Second Argument (Type) is the Airplane type
+* Flight_Hour is the Table of Flight Hours given in Prob, First Argument (k) is the city and the Second Argument (Type) is the Airplane type
+
+
+
+variables
+ z OptAnswer
+integer variables
+*Number of Daily Flights of ith Large Airplane to City k
+ B(i,k)
+*Number of Daily Flights of jth Medium Airplane to City k
+ W(j,k)
+*Number of Daily Flights of mth Small Airplane to City k
+ L(m,k)
+ ;
+
+Equation
+Goal
+
+*Constraints related to the number of flights that each city should have daily.
+Fly_Num1
+Fly_Num2
+Fly_Num3
+Fly_Num4
+
+*Constraints related to the Maximum daily flight hour limit of each airplane
+Hour_I(i)
+Hour_J(j)
+Hour_M(m)
+
+* Medium Airplanes cant fly to City D
+Impossible_Flight(j)
+
+* Sign Constraint
+Sign_B(i,k)
+Sign_W(j,k)
+Sign_L(m,k)
+;
+
+
+*Minimizing Total Flight Hour
+Goal.. z =E= sum(i,Flight_Hour('1','B777')*B(i,'1') + Flight_Hour('2','B777')*B(i,'2') +
+Flight_Hour('3','B777')*B(i,'3') + Flight_Hour('4','B777')*B(i,'4')) +
+sum(j,Flight_Hour('1','A330')*W(j,'1') + Flight_Hour('2','A330')*W(j,'2') +
+Flight_Hour('3','A330')*W(j,'3')) +
+sum(m,Flight_Hour('1','A320')*L(m,'1') + Flight_Hour('2','A320')*L(m,'2') +
+Flight_Hour('3','A320')*L(m,'3') + Flight_Hour('4','A320')*L(m,'4'));
+
+*Constraints related to the number of flights that each city should have daily.
+Fly_Num1..sum(i , B(i,'1')) + sum(j,W(j,'1')) + sum(m,L(m,'1')) =E=4;
+Fly_Num2..sum(i , B(i,'2')) + sum(j,W(j,'2')) + sum(m,L(m,'2')) =E=4;
+Fly_Num3..sum(i , B(i,'3')) + sum(j,W(j,'3')) + sum(m,L(m,'3')) =E=4;
+Fly_Num4..sum(i , B(i,'4')) + sum(j,W(j,'4')) + sum(m,L(m,'4')) =E=2;
+
+*Constraints related to the Maximum daily flight hour limit of each airplane
+Hour_I(i).. Flight_Hour('1','B777')*B(i,'1') + Flight_Hour('2','B777')*B(i,'2') + Flight_Hour('3','B777')*B(i,'3') + Flight_Hour('4','B777')*B(i,'4') =l= 18;
+Hour_J(j).. Flight_Hour('1','A330')*W(j,'1') + Flight_Hour('2','A330')*W(j,'2') + Flight_Hour('3','A330')*W(j,'3')  =l= 18;
+Hour_M(m).. Flight_Hour('1','A320')*L(m,'1') + Flight_Hour('2','A320')*L(m,'2') + Flight_Hour('3','A320')*L(m,'3') + Flight_Hour('4','A320')*L(m,'4') =l= 18;
+
+* Medium Airplanes cant fly to City D
+Impossible_Flight(j).. W(j,'4') =e= 0 ;
+
+* Sign Constraint
+Sign_B(i,k).. B(i,k)=g=0      ;
+Sign_W(j,k)..W(j,k) =g=0   ;
+Sign_L(m,k)..L(m,k) =g=0
+;
+
+
+Model Question1_Part3 inja modele /all/;
+Solve Question1_Part3 using MIP minimization z;
+
+*Output
+execute_unload "Output_Part3.gdx"   z , B, W,L ;
+execute 'gdxxrw.exe Output_Part3.gdx var=z rng=TargetFunction_MinFlightTime!a1'
+execute 'gdxxrw.exe Output_Part3.gdx var=B rng=B777Airplane!a1'
+execute 'gdxxrw.exe Output_Part3.gdx var=W rng=A330Airplane!a1'
+execute 'gdxxrw.exe Output_Part3.gdx var=L rng=A320Airplane!a1'
+
+
+
+
+////////Q2-Part1
+
+
+sets
+
+*Newspaper Interval Index
+  i Interval_News /1*3/
+*TV Interval Index
+  j Interval_TV /1*3/
+*Binary Variable Index
+  k BinaryVariable /1*5/
+
+variables
+ u OptAnswer
+integer variables
+
+*Number of News Ad in ith interval
+X(i)
+
+*Number of TV Ad in jth interval
+Y(j)
+
+binary variables
+Z(k)
+;
+
+Equation
+Goal
+
+*Budget Constraint
+Budget
+
+*Constraint Subject to TV Intervals
+Interval_TV(j)
+Interval_TV_1
+Interval_TV_2
+Interval_TV_3
+Interval_TV_4
+Interval_TV_5
+Interval_TV_6
+
+*Constraint Subject to News Intervals
+Interval_News(i)
+Interval_News_1
+Interval_News_2
+Interval_News_3
+Interval_News_4
+Interval_News_5
+Interval_News_6
+
+*Constraint Subject to Number Of Ad
+News_Ad_Num
+TV_Ad_Num
+
+
+* Sign Constraint
+Sign_X(i)
+Sign_Y(j)
+;
+
+*Maximizing Customer
+
+Goal.. u =E= 900*X('1')+ 600*X('2')+300*X('3')+10000*Y('1')+5000*Y('2')+2000*Y('3');
+
+Interval_News(i)..X(i) =l= 10;
+Interval_TV(j).. Y(j) =l= 5;
+
+
+Budget.. 1000*(X('1')+X('2')+X('3'))+10000*(Y('1')+Y('2')+Y('3')) =l= 150000 ;
+
+
+*Constraint Subject to TV Intervals
+Interval_News_1..   X('1') =l=10          ;
+Interval_News_2..   X('1') =g=10*Z('1')   ;
+Interval_News_3..   X('2') =l=10*Z('1')   ;
+Interval_News_4..   X('2') =g=10*Z('2')   ;
+Interval_News_5..   X('3') =l=10*Z('2')   ;
+Interval_News_6..   X('3') =g=0           ;
+
+*Constraint Subject to News Intervals
+Interval_TV_1.. Y('1') =g=5            ;
+Interval_TV_2.. Y('1') =g=5*Z('3')     ;
+Interval_TV_3.. Y('2') =g=5*Z('3')     ;
+Interval_TV_4.. Y('2') =g=5*Z('4')     ;
+Interval_TV_5.. Y('3') =g=5*Z('4')     ;
+Interval_TV_6.. Y('3') =g=0            ;
+
+*Constraint Subject to Number Of Ad
+TV_Ad_Num.. Y('1')+Y('2')+Y('3') =l= 15 ;
+News_Ad_Num..   X('1')+X('2')+X('3') =l= 30 ;
+
+* Sign Constraint
+Sign_X(i).. X(i) =g=0                     ;
+Sign_Y(j).. Y(j) =g=0
+;
+
+Model Question2_Part1 inja modele /all/;
+Solve Question2_Part1 using MIP maximization u;
+
+
+////////Q2-Part2
+
+
+sets
+
+*Newspaper Interval Index
+  i Interval_News /1*3/
+*TV Interval Index
+  j Interval_TV /1*5/
+*Binary Variable Index
+  k BinaryVariable /1*5/
+
+variables
+ u OptAnswer
+integer variables
+
+*Number of News Ad in ith interval
+X(i)
+
+*Number of TV Ad in jth interval
+Y(j)
+
+binary variables
+Z(k)
+;
+
+Equation
+Goal
+
+*Budget Constraint
+Budget
+
+*Constraint Subject to TV Intervals
+Interval_TV_1
+Interval_TV_2
+Interval_TV_3
+Interval_TV_4
+Interval_TV_5
+Interval_TV_6
+
+*Constraint Subject to TV Intervals Part 2
+Interval_TV_11
+Interval_TV_22
+Interval_TV_33
+
+Interval_TV_111
+Interval_TV_222
+Interval_TV_333
+Interval_TV_444
+Interval_TV_555
+
+*Constraint Subject to News Intervals
+Interval_News(i)
+Interval_News_1
+Interval_News_2
+Interval_News_3
+Interval_News_4
+Interval_News_5
+Interval_News_6
+
+*Constraint Subject to Number Of Ad
+News_Ad_Num
+TV_Ad_Num
+
+
+*Sign Constraint
+Sign_X(i)
+Sign_Y(j)
+
+*Part Two Constraints
+
+*Total Ad Number
+Total_Ad_Num
+
+*Relation between TV Ads
+TV_Ads
+;
+
+*Maximizing Customer
+
+Goal.. u =E= 900*X('1')+ 600*X('2')+300*X('3')+10000*Y('1')+5000*Y('2')+2000*Y('3');
+
+
+
+
+*Budget Constraint
+Budget.. 1000*(X('1')+X('2')+X('3'))+10000*Y('4')+8000*Y('5') =l= 150000 ;
+
+
+*Constraint Subject to TV Intervals
+Interval_News(i)..  X(i)   =l= 10         ;
+Interval_News_1..   X('1') =l=10          ;
+Interval_News_2..   X('1') =g=10*Z('1')   ;
+Interval_News_3..   X('2') =l=10*Z('1')   ;
+Interval_News_4..   X('2') =g=10*Z('2')   ;
+Interval_News_5..   X('3') =l=10*Z('2')   ;
+Interval_News_6..   X('3') =g=0           ;
+
+Interval_TV_1.. Y('1') =l=5            ;
+Interval_TV_2.. Y('1') =g=5*Z('3')     ;
+Interval_TV_3.. Y('2') =l=5*Z('3')     ;
+Interval_TV_4.. Y('2') =g=5*Z('4')     ;
+Interval_TV_5.. Y('3') =l=5*Z('4')     ;
+Interval_TV_6.. Y('3') =g=0            ;
+
+
+*Constraint Subject to TV Intervals Part 2
+Interval_TV_11.. Y('4') =l=12            ;
+Interval_TV_22.. Y('4') =g=12*Z('5')     ;
+Interval_TV_33.. Y('5') =l=3*Z('5')     ;
+
+Interval_TV_111.. Y('1') =l= 5;
+Interval_TV_222.. Y('2') =l= 5;
+Interval_TV_333.. Y('3') =l= 5;
+Interval_TV_444.. Y('4') =l= 12;
+Interval_TV_555.. Y('5') =l= 3;
+
+
+*Constraint Subject to Number Of Ad
+TV_Ad_Num.. Y('1')+Y('2')+Y('3') =l= 15 ;
+News_Ad_Num..   X('1')+X('2')+X('3') =l= 30 ;
+
+
+*Total Ad Number
+Total_Ad_Num.. X('1')+ X('2')+ X('3')+ Y('1')+ Y('2')+ Y('3') =l= 30;
+
+
+*Relation between TV Ads
+TV_Ads.. Y('1')+Y('2')+Y('3') =e= Y('4')+Y('5');
+
+*Sign Constraint
+Sign_X(i).. X(i) =g=0 ;
+Sign_Y(j).. Y(j) =g=0
+;
+
+Model Question2_Part2 inja modele /all/;
+Solve Question2_Part2 using MIP maximization u;
+
