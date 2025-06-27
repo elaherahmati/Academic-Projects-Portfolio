@@ -25,6 +25,11 @@ Each project is placed in its own subdirectory with a `README.md` and, where app
 - Multi-year linear optimization for a production system with machinery decay, material transformation, and labor constraints.
 - Includes full sensitivity analysis and visual outputs.
 
+### 💼 Salary Class Prediction (Python)
+- Developed classification models (KNN, Random Forest, Logistic Regression, etc.) to predict employee salary tiers using HR data.
+- Applied PCA, SMOTE, and statistical modeling for preprocessing and evaluation.
+- Demonstrated use of data balancing, model interpretability, and multi-model comparison.
+
 ---
 
 ## 🧠 Skills Demonstrated
