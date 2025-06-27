@@ -46,7 +46,7 @@ The simulation outputs include:
 ## 📁 Files
 
 - `main.py` – Main simulation code
-- `/Simulation Outputs and Statistics` – Folder containing generated Excel files and visualizations
+- `/Simulation Outputs and Statistics` – Folder containing generated Excel files,reports and visualizations
 - `README.md` – This file
 
 ## 🔍 Key Insights
