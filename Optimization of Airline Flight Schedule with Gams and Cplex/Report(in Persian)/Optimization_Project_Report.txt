@@ -1,0 +1,42 @@
+
+Optimization Project Report
+===========================
+
+Author: Elaheh Rahmati
+
+Project Overview
+----------------
+This university assignment focused on modeling and solving an optimization problem involving two main parts:
+
+**Part 1: Airline Flight Scheduling Optimization**
+The objective was to determine the optimal daily flight schedule from a central hub (City O) to four destination cities (A, B, C, D) using a mixed fleet of large, medium, and small aircraft. The project involved formulating and solving three variations of the problem:
+1. Minimizing total cost of operation.
+2. Maximizing profit.
+3. Minimizing total flight hours.
+
+Modeling and implementation were done in both **GAMS** and **CPLEX (OPL)**. Constraints considered:
+- Minimum number of daily flights per city.
+- Maximum flight hours per aircraft.
+- Medium aircraft not allowed to fly to City D.
+
+The models used integer programming and produced multiple optimal solutions in some cases due to the linear nature of the problem.
+
+**Part 2: Marketing Budget Allocation**
+The second part tackled a budget allocation problem. The goal was to maximize the number of customers attracted via newspaper and television ads, under a fixed budget and a set of constraints on ad intervals and total ad limits.
+
+Two cases were modeled:
+1. Without restrictions on ad intervals.
+2. With new contractual constraints on the number of ads, particularly limiting extra TV ads due to cost implications.
+
+Again, both **GAMS** and **CPLEX** were used for implementation.
+
+Results Summary
+---------------
+- Part 1: The models provided cost-effective and efficient flight scheduling, with GAMS and CPLEX yielding equivalent objective values in most cases.
+- Part 2: GAMS produced slightly better objective results in some cases, likely due to solver implementation differences.
+
+Conclusion
+----------
+This project demonstrated the use of integer programming in practical scheduling and resource allocation problems. Modeling in both GAMS and CPLEX offered valuable comparative insights. The full discussion and mathematical modeling are documented in the Farsi report.
+
+Note: Full analytical discussion is available only in Persian.
