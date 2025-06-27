@@ -35,8 +35,9 @@ It assigns a score to each possible move and selects the best-scoring move to pl
 
 ## 📂 Files
 
-- `chess_game.c` – main program
+- `chess_game.cpp` – main program
 - `README.md` – project description
+- `Chess.exe` - exe file of the program
 
 > Note: This was an early-stage project intended for learning logic structuring, game state handling, and working with basic user input systems.
 
