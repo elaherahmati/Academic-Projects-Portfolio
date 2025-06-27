@@ -36,7 +36,8 @@ Develop an interpretable classification model that predicts the **salary class**
 
 | `/Reports`         Reports and Analysis            
 | `main.py`          Jupyter Notebook containing full analysis and modeling 
-| `README.md`        Project overview (this file)                     
+| `README.md`        Project overview (this file)     
+| `requirements.txt` Python dependencies and packages used    
 
 ## 💡 Tools & Libraries
 - Python
