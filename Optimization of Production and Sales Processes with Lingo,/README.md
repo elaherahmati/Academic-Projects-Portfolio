@@ -50,5 +50,5 @@ Maximize the total 5-year profit considering:
 ## Files
 
 - `model.lng` – LINGO source code for the model
-- `report_en.pdf` – Final report with model description, variables, objective, constraints, and analysis
-- `sensitivity_analysis.xlsx` – Sensitivity and optimization output visualizations
+- `/Reports` – Final report with model description, variables, objective, constraints, and analysis
+- `/Outputs` – Sensitivity and optimization output visualizations
