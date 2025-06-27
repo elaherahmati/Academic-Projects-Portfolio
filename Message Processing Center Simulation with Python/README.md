@@ -64,5 +64,4 @@ The simulation outputs include:
 
 ## 🗂️ Project Status
 
-Completed as a university simulation assignment. All analysis and discussion included in final report.
-
+Completed as a university simulation assignment. A detailed analysis and discussion of the results is included in the final report (currently available only in Persian).
