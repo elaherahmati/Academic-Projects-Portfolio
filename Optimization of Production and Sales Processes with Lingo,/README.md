@@ -45,7 +45,7 @@ Maximize the total 5-year profit considering:
 - Output files include:
   - `.lng` optimization model
   - Excel file with solution and sensitivity ranges
-  - Final report (in English)
+  - Final report
 
 ## Files
 
